@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raport Santri – MTSS PON-PES DARUL QUR'AN</title>
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1d2bc4;--green:#1b6b3a;--gold:#d9a81e;--ink:#1c2230;--mute:#5b6475;--line:#d9dde6;--bg:#f3f5f8}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+.top{background:#fff;border-bottom:4px solid var(--green)}
+.brand{max-width:1100px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.brand img{width:64px;height:64px;object-fit:contain}
+.brand b{display:block;font:700 26px/1.1 'Source Serif 4',Georgia,serif;color:var(--blue);letter-spacing:.5px}
+.brand span{color:var(--mute);font-size:13px}
+nav{max-width:1100px;margin:auto;padding:0 16px;display:flex;gap:4px;flex-wrap:wrap}
+nav a{padding:10px 14px;color:var(--ink);text-decoration:none;font-weight:600;border-bottom:3px solid transparent;margin-bottom:-4px}
+nav a.on{color:var(--green);border-color:var(--gold)}
+main{max-width:1100px;margin:20px auto;padding:0 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px}
+h2{margin:0 0 12px;font:700 20px 'Source Serif 4',Georgia,serif}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.row>label{flex:1 1 150px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mute)}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid #b9c0cd;border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid #9db0ff;outline-offset:1px}
+button{padding:9px 16px;border:0;border-radius:6px;background:var(--green);color:#fff;font:600 14px 'Public Sans',sans-serif;cursor:pointer}
+button.alt{background:#fff;color:var(--ink);border:1px solid #b9c0cd}button.del{background:#fff;color:#a4262c;border:1px solid #e3b5b8}
+table.t{width:100%;border-collapse:collapse}.t th,.t td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.t th{font-size:13px;color:var(--mute)}.t input,.t select{padding:5px 7px}.scroll{overflow-x:auto}
+.ok{color:var(--green);font-size:13px;font-weight:600}.mute{color:var(--mute)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.sheet{background:#fff;width:210mm;min-height:297mm;margin:0 auto 16px;padding:10mm 14mm;font:11pt/1.4 'Source Serif 4','Times New Roman',serif;color:#000;border:1px solid var(--line)}
+.sheet img.kop{width:100%;display:block}.sheet h3{text-align:center;margin:8px 0 2px;font-size:13pt}.sheet .sub{text-align:center;margin-bottom:8px}
+.sheet table{width:100%;border-collapse:collapse;margin:6px 0 10px}.sheet td,.sheet th{border:1px solid #000;padding:3px 6px;text-align:center;font-size:10.5pt}
+.sheet td.l{text-align:left}.sheet tr.g td{background:#e8eef0;font-weight:700;text-align:left}.sheet table.id td{border:0;padding:1px 6px;text-align:left}
+.sheet h4{margin:8px 0 3px;font-size:11pt}.sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center;margin-top:14px}.sig div{min-height:80px}
+@media print{body{background:#fff}.top,.noprint{display:none!important}main{margin:0;padding:0;max-width:none}.sheet{border:0;margin:0;padding:8mm 12mm;page-break-after:always;width:auto;min-height:0}@page{size:A4;margin:6mm}}
+</style>
+</head>
+<body>
+<header class="top noprint">
+<div class="brand"><img src="assets/logo.png" alt="Logo MTSS Pon-Pes Darul Qur'an"><div><b>MTSS PON-PES DARUL QUR’AN</b><span>Yayasan Islamic Centre Darul Qur’an · Aplikasi Raport Santri</span></div></div>
+<nav id="nav"><a href="#santri">Data Santri</a><a href="#mapel">Mata Pelajaran</a><a href="#nilai">Input Nilai</a><a href="#raport">Cetak Raport</a><a href="#atur">Pengaturan</a></nav>
+</header>
+<main id="v"></main>
+<script>
+const K='raport-darulquran-v1',$=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dm=[['Al-Qur’an Hadis','Diniyah'],['Akidah Akhlak','Diniyah'],['Fikih','Diniyah'],['Sejarah Kebudayaan Islam','Diniyah'],['Bahasa Arab','Diniyah'],['Pendidikan Pancasila','Umum'],['Bahasa Indonesia','Umum'],['Matematika','Umum'],['IPA','Umum'],['IPS','Umum'],['Bahasa Inggris','Umum'],['PJOK','Umum']];
+const D=()=>({set:{ta:'2026/2027',sem:'Ganjil',kepala:'',nip:'',tempat:'Deli Serdang',tgl:'',wali:{}},santri:[],mapel:dm.map(m=>({id:uid(),nama:m[0],kat:m[1],kkm:70})),nilai:{}});
+let S;try{S=Object.assign(D(),JSON.parse(localStorage.getItem(K)||'{}'))}catch(e){S=D()}
+const save=()=>localStorage.setItem(K,JSON.stringify(S));
+const key=id=>`${S.set.ta}|${S.set.sem}|${id}`,num=x=>x===''||x==null?null:+x,f=x=>x==null?'':x;
+const avg=a=>{a=a.filter(x=>x!=null);return a.length?Math.round(a.reduce((s,x)=>s+x,0)/a.length):null};
+const pred=n=>n>=90?'A':n>=80?'B':n>=70?'C':'D',SK={A:'Sangat Baik',B:'Baik',C:'Cukup',D:'Kurang'};
+const kelasList=()=>[...new Set(S.santri.map(s=>s.kelas).filter(Boolean))].sort();
+const opts=(a,sel)=>a.map(x=>`<option ${x===sel?'selected':''}>${esc(x)}</option>`).join('');
+const setPath=(o,p,v)=>{const k=p.split('.');k.slice(0,-1).forEach(x=>o=o[x]??(o[x]={}));o[k.pop()]=v};
+const mean=id=>{const n=(S.nilai[key(id)]||{}).n||{};return avg(S.mapel.map(m=>n[m.id]?avg([num(n[m.id].p),num(n[m.id].k)]):null))};
+const rank=s=>{const me=mean(s.id);if(me==null)return'';const all=S.santri.filter(x=>x.kelas===s.kelas).map(x=>mean(x.id)).filter(x=>x!=null);return 1+all.filter(x=>x>me).length+' dari '+all.length};
+let sel={kelas:'',sid:''},edit='';
+const V=$('#v');
+function render(){const r=(location.hash||'#santri').slice(1);document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+r));(views[r]||views.santri)()}
+const views={
+santri(){const e=S.santri.find(s=>s.id===edit)||{};const q=sel.kelas;
+V.innerHTML=`<div class="card"><h2>${edit?'Ubah data santri':'Tambah santri'}</h2><form id="fs"><div class="row">
+<label>Nama lengkap<input name="nama" required value="${esc(e.nama)}"></label><label>NIS<input name="nis" value="${esc(e.nis)}"></label><label>NISN<input name="nisn" value="${esc(e.nisn)}"></label>
+<label>Kelas<input name="kelas" required list="kl" placeholder="mis. VIII A" value="${esc(e.kelas)}"><datalist id="kl">${kelasList().map(k=>`<option>${esc(k)}</option>`).join('')}</datalist></label>
+<label>Jenis kelamin<select name="jk">${opts(['Laki-laki','Perempuan'],e.jk)}</select></label><label>Tempat, tanggal lahir<input name="ttl" value="${esc(e.ttl)}"></label><label>Nama orang tua/wali<input name="wali" value="${esc(e.wali)}"></label>
+<button>${edit?'Simpan perubahan':'Tambah santri'}</button>${edit?'<button type="button" class="alt" id="bc">Batal</button>':''}</div></form></div>
+<div class="card"><div class="row"><h2>Daftar santri (${S.santri.length})</h2><label style="max-width:200px">Filter kelas<select id="fk"><option value="">Semua kelas</option>${kelasList().map(k=>`<option ${k===q?'selected':''}>${esc(k)}</option>`).join('')}</select></label></div>
+<div class="scroll"><table class="t"><tr><th>Nama</th><th>NIS / NISN</th><th>Kelas</th><th>Orang tua/wali</th><th></th></tr>${S.santri.filter(s=>!q||s.kelas===q).map(s=>`<tr><td>${esc(s.nama)}</td><td>${esc(s.nis)} / ${esc(s.nisn)}</td><td>${esc(s.kelas)}</td><td>${esc(s.wali)}</td><td><button class="alt" data-e="${s.id}">Ubah</button> <button class="del" data-d="${s.id}">Hapus</button></td></tr>`).join('')||'<tr><td colspan="5" class="mute">Belum ada santri. Isi formulir di atas untuk menambah.</td></tr>'}</table></div></div>`;
+$('#fs').onsubmit=ev=>{ev.preventDefault();const d=Object.fromEntries(new FormData(ev.target));if(edit)Object.assign(S.santri.find(s=>s.id===edit),d);else S.santri.push({id:uid(),...d});edit='';save();views.santri()};
+$('#fk').onchange=ev=>{sel.kelas=ev.target.value;views.santri()};if($('#bc'))$('#bc').onclick=()=>{edit='';views.santri()};
+V.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{edit=b.dataset.e;views.santri();scrollTo(0,0)});
+V.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const s=S.santri.find(x=>x.id===b.dataset.d);if(confirm(`Hapus ${s.nama}? Nilainya ikut terhapus.`)){S.santri=S.santri.filter(x=>x.id!==s.id);save();views.santri()}})},
+mapel(){V.innerHTML=`<div class="card"><h2>Mata pelajaran</h2><p class="mute">Ubah nama, kelompok, dan KKM. Perubahan tersimpan otomatis.</p><div class="scroll"><table class="t"><tr><th>Nama mata pelajaran</th><th>Kelompok</th><th>KKM</th><th></th></tr>${S.mapel.map(m=>`<tr><td><input data-m="${m.id}.nama" value="${esc(m.nama)}"></td><td><select data-m="${m.id}.kat">${opts(['Diniyah','Umum'],m.kat)}</select></td><td><input type="number" min="0" max="100" style="width:80px" data-m="${m.id}.kkm" value="${m.kkm}"></td><td><button class="del" data-d="${m.id}">Hapus</button></td></tr>`).join('')}</table></div><p><button id="am">Tambah mata pelajaran</button></p></div>`;
+V.oninput=ev=>{const d=ev.target.dataset.m;if(d){const[i,k]=d.split('.');S.mapel.find(m=>m.id===i)[k]=k==='kkm'?+ev.target.value:ev.target.value;save()}};
+$('#am').onclick=()=>{S.mapel.push({id:uid(),nama:'Mata pelajaran baru',kat:'Umum',kkm:70});save();views.mapel()};
+V.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{if(confirm('Hapus mata pelajaran ini?')){S.mapel=S.mapel.filter(m=>m.id!==b.dataset.d);save();views.mapel()}})},
+nilai(){const ks=kelasList();if(!sel.kelas||!ks.includes(sel.kelas))sel.kelas=ks[0]||'';const ss=S.santri.filter(s=>s.kelas===sel.kelas);if(!ss.find(s=>s.id===sel.sid))sel.sid=(ss[0]||{}).id||'';
+if(!sel.sid){V.innerHTML='<div class="card"><h2>Input nilai</h2><p class="mute">Tambahkan santri lebih dulu di menu Data Santri.</p></div>';return}
+const s=S.santri.find(x=>x.id===sel.sid),r=S.nilai[key(s.id)]||{},n=r.n||{},h=r.h||{},k=r.s||{},a=r.a||{},i=ss.findIndex(x=>x.id===s.id);
+const inp=(p,v,t='number')=>`<input type="${t}" ${t==='number'?'min="0" max="100"':''} data-f="${p}" value="${esc(v)}">`,sk=p=>`<select data-f="${p}">${['A','B','C','D'].map(x=>`<option value="${x}" ${(k[p.split('.')[1]]||'B')===x?'selected':''}>${x} – ${SK[x]}</option>`).join('')}</select>`;
+V.innerHTML=`<div class="card"><h2>Input nilai · Semester ${esc(S.set.sem)} ${esc(S.set.ta)}</h2><div class="row"><label>Kelas<select id="ik">${opts(ks,sel.kelas)}</select></label><label>Santri<select id="is">${ss.map(x=>`<option value="${x.id}" ${x.id===s.id?'selected':''}>${esc(x.nama)}</option>`).join('')}</select></label><button class="alt" id="pv" ${i<1?'disabled':''}>Sebelumnya</button><button class="alt" id="nx" ${i>=ss.length-1?'disabled':''}>Berikutnya</button><span class="ok" id="sv"></span></div></div>
+<div class="card"><h2>Nilai mata pelajaran – ${esc(s.nama)}</h2><div class="scroll"><table class="t"><tr><th>Mata pelajaran</th><th>KKM</th><th>Pengetahuan</th><th>Keterampilan</th></tr>${S.mapel.map(m=>`<tr><td>${esc(m.nama)}</td><td>${m.kkm}</td><td>${inp('n.'+m.id+'.p',(n[m.id]||{}).p??'')}</td><td>${inp('n.'+m.id+'.k',(n[m.id]||{}).k??'')}</td></tr>`).join('')}</table></div></div>
+<div class="card"><h2>Tahfizh, sikap, dan kehadiran</h2><div class="g2"><label>Jumlah hafalan (juz)${inp('h.juz',h.juz??'')}</label><label>Nilai tahfizh${inp('h.nilai',h.nilai??'')}</label><label>Capaian terakhir (surat/ayat)${inp('h.ket',h.ket??'','text')}</label>
+<label>Ibadah${sk('s.ibadah')}</label><label>Akhlak${sk('s.akhlak')}</label><label>Kedisiplinan${sk('s.disiplin')}</label><label>Sakit (hari)${inp('a.s',a.s??'')}</label><label>Izin (hari)${inp('a.i',a.i??'')}</label><label>Alpa (hari)${inp('a.a',a.a??'')}</label></div>
+<label style="margin-top:10px">Catatan wali kelas<textarea rows="3" data-f="c">${esc(r.c)}</textarea></label></div>`;
+const go=()=>views.nilai();$('#ik').onchange=e=>{sel.kelas=e.target.value;go()};$('#is').onchange=e=>{sel.sid=e.target.value;go()};
+$('#pv').onclick=()=>{sel.sid=ss[i-1].id;go()};$('#nx').onclick=()=>{sel.sid=ss[i+1].id;go()};
+V.oninput=ev=>{const p=ev.target.dataset.f;if(!p)return;setPath(S.nilai[key(s.id)]??(S.nilai[key(s.id)]={}),p,ev.target.value);save();$('#sv').textContent='Tersimpan'}},
+raport(){const ks=kelasList();if(!sel.kelas||!ks.includes(sel.kelas))sel.kelas=ks[0]||'';const ss=S.santri.filter(s=>s.kelas===sel.kelas);
+V.innerHTML=`<div class="card noprint"><h2>Cetak raport</h2><div class="row"><label>Kelas<select id="rk">${opts(ks,sel.kelas)}</select></label><label>Santri<select id="rs"><option value="">Semua santri di kelas ini</option>${ss.map(x=>`<option value="${x.id}" ${x.id===sel.rid?'selected':''}>${esc(x.nama)}</option>`).join('')}</select></label><button id="pr">Cetak / simpan PDF</button></div><p class="mute">Pilih “Simpan sebagai PDF” pada jendela cetak untuk membuat berkas PDF. Gunakan kertas A4.</p></div>${(sel.rid?ss.filter(x=>x.id===sel.rid):ss).map(sheet).join('')||'<p class="mute">Belum ada data santri.</p>'}`;
+$('#rk').onchange=e=>{sel.kelas=e.target.value;sel.rid='';views.raport()};$('#rs').onchange=e=>{sel.rid=e.target.value;views.raport()};$('#pr').onclick=()=>print()},
+atur(){const t=S.set,ks=kelasList();V.innerHTML=`<div class="card"><h2>Periode dan pejabat</h2><div class="g2"><label>Tahun pelajaran<input data-s="ta" value="${esc(t.ta)}"></label><label>Semester<select data-s="sem">${opts(['Ganjil','Genap'],t.sem)}</select></label><label>Tempat penerbitan<input data-s="tempat" value="${esc(t.tempat)}"></label><label>Tanggal raport<input type="date" data-s="tgl" value="${esc(t.tgl)}"></label><label>Nama kepala madrasah<input data-s="kepala" value="${esc(t.kepala)}"></label><label>NIP/NIY kepala madrasah<input data-s="nip" value="${esc(t.nip)}"></label></div></div>
+<div class="card"><h2>Wali kelas</h2><div class="g2">${ks.map(k=>`<label>Wali kelas ${esc(k)}<input data-w="${esc(k)}" value="${esc(t.wali[k])}"></label>`).join('')||'<span class="mute">Muncul setelah ada data santri.</span>'}</div></div>
+<div class="card"><h2>Cadangan data</h2><p class="mute">Data tersimpan di peramban perangkat ini saja. Unduh cadangan secara berkala, dan pindahkan ke perangkat lain lewat tombol impor.</p><div class="row"><button id="ex">Unduh cadangan (JSON)</button><label style="flex:0 0 auto">Impor cadangan<input type="file" id="im" accept=".json"></label><button class="del" id="rs">Hapus semua data</button></div></div>`;
+V.oninput=ev=>{const d=ev.target.dataset;if(d.s)t[d.s]=ev.target.value;if(d.w)t.wali[d.w]=ev.target.value;save()};
+$('#ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='cadangan-raport-darul-quran.json';a.click()};
+$('#im').onchange=e=>{const fr=new FileReader();fr.onload=()=>{try{S=Object.assign(D(),JSON.parse(fr.result));save();alert('Cadangan berhasil diimpor.');views.atur()}catch(x){alert('Berkas tidak valid.')}};fr.readAsText(e.target.files[0])};
+$('#rs').onclick=()=>{if(confirm('Hapus semua data santri dan nilai di perangkat ini?')){S=D();save();views.atur()}}}};
+function sheet(s){const r=S.nilai[key(s.id)]||{},n=r.n||{},h=r.h||{},k=r.s||{},a=r.a||{},t=S.set;let no=0,b='';
+for(const g of['Diniyah','Umum']){const ms=S.mapel.filter(m=>m.kat===g);if(!ms.length)continue;b+=`<tr class="g"><td colspan="7">Kelompok ${g==='Diniyah'?'Diniyah / Keagamaan':'Umum'}</td></tr>`;
+for(const m of ms){const v=n[m.id]||{},p=num(v.p),q=num(v.k),x=avg([p,q]);b+=`<tr><td>${++no}</td><td class="l">${esc(m.nama)}</td><td>${m.kkm}</td><td>${f(p)}</td><td>${f(q)}</td><td>${f(x)}</td><td>${x==null?'':pred(x)+(x<m.kkm?' *':'')}</td></tr>`}}
+const tg=t.tgl?new Date(t.tgl+'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'……………………………';
+return`<section class="sheet"><img class="kop" src="assets/kop.jpeg" alt="Kop MTSS Pon-Pes Darul Qur'an"><h3>LAPORAN HASIL BELAJAR SANTRI (RAPORT)</h3><div class="sub">Semester ${esc(t.sem)} · Tahun Pelajaran ${esc(t.ta)}</div>
+<table class="id"><tr><td width="18%">Nama Santri</td><td width="40%">: ${esc(s.nama)}</td><td width="18%">Kelas</td><td>: ${esc(s.kelas)}</td></tr><tr><td>NIS / NISN</td><td>: ${esc(s.nis)} / ${esc(s.nisn)}</td><td>Semester</td><td>: ${esc(t.sem)}</td></tr><tr><td>Orang tua/wali</td><td>: ${esc(s.wali)}</td><td>Tahun Pelajaran</td><td>: ${esc(t.ta)}</td></tr></table>
+<h4>A. Nilai Mata Pelajaran</h4><table><tr><th>No</th><th>Mata Pelajaran</th><th>KKM</th><th>Pengetahuan</th><th>Keterampilan</th><th>Rata-rata</th><th>Predikat</th></tr>${b}</table>
+<div style="font-size:9pt;margin-top:-8px">Predikat: A (90–100), B (80–89), C (70–79), D (&lt;70). Tanda * = di bawah KKM. ${rank(s)?'Peringkat kelas: <b>'+rank(s)+'</b>.':''}</div>
+<h4>B. Tahfizh Al-Qur’an</h4><table><tr><th>Jumlah Hafalan</th><th>Nilai</th><th>Capaian Terakhir</th></tr><tr><td>${f(h.juz)} juz</td><td>${f(h.nilai)}</td><td>${esc(h.ket)}</td></tr></table>
+<h4>C. Sikap dan Akhlak</h4><table><tr><th>Ibadah</th><th>Akhlak</th><th>Kedisiplinan</th></tr><tr><td>${SK[k.ibadah||'B']}</td><td>${SK[k.akhlak||'B']}</td><td>${SK[k.disiplin||'B']}</td></tr></table>
+<h4>D. Ketidakhadiran</h4><table><tr><th>Sakit</th><th>Izin</th><th>Tanpa Keterangan</th></tr><tr><td>${f(num(a.s))||0} hari</td><td>${f(num(a.i))||0} hari</td><td>${f(num(a.a))||0} hari</td></tr></table>
+<h4>E. Catatan Wali Kelas</h4><div style="border:1px solid #000;padding:6px;min-height:40px">${esc(r.c)}</div>
+<div class="sig"><div>Orang Tua/Wali<br><br><br><br>( ................................ )</div><div>Wali Kelas<br><br><br><br><b><u>${esc(t.wali[s.kelas])||'................................'}</u></b></div><div>${esc(t.tempat)}, ${tg}<br>Kepala Madrasah<br><br><br><b><u>${esc(t.kepala)||'................................'}</u></b><br>${t.nip?'NIP/NIY. '+esc(t.nip):''}</div></div></section>`}
+addEventListener('hashchange',render);render();
+</script>
+</body>
+</html>
